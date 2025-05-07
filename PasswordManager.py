@@ -62,23 +62,26 @@ def intialUserLogin(credentials):
         first = input("First Name: ")
         last = input("Last Name: ")
         
-    
+    tries=0
     if tries <3:
+        userUser=""
+        userPass=""
         while credentials != True:
-        # if userUser==username and userPass==password:  however you check if the credentials are correct
+            if userUser==username and userPass==password:  #however you check if the credentials are correct
                 credentials = True
-        # else:
-                print("Incorrect username or password, try again")
+            else:
+                if tries>0:
+                    print("Incorrect username or password, try again")
                 userUser = input("Username:  ")
                 print(f"Password Hint: ______")  # Access the hint from the text file and print to screen
                 userPass = input("Password:  ")
                 tries+=1
     else:
         print("Sorry, you have too many invalid login attempts. Close the program and try again.")
-        exit
+        exit()
 
 def newAccount():
-    category = input("Category: ")
+    category = input("Category (Home, Work, Entertainment, Bills): ")
     name = input("Account Name: ")
     username = input("Username: ")
     password = input("Password: ")   # Make sure the password meets requirements
@@ -160,6 +163,9 @@ options = {
         "6":deleteAccount,
         "7":exit
         }
+
+#Login
+intialUserLogin(False)
 
 while True:
     print("\n--- Password Manager ---")
