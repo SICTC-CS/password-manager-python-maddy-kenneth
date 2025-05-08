@@ -47,22 +47,26 @@ def passwordGenerator():
 
 
 def intialUserLogin(credentials):
-    existingUser = input("Do you have an account? (y/n)")
-    
-    if existingUser == "y":
-        username = accounts["username"][userUser]
-        password = accounts["password"][userPass]
-        hint = accounts["hint"][userUser]
-        print(hint)
-    else:
-        print("Create a Profile:")
-        category = input("What type of account is this? ")
-        username = input("Username: ")
-        password = input("Password: ")   # Make sure the password meets requirements
-        hint = input("Password Hint: ")
-        first = input("First Name: ")
-        last = input("Last Name: ")
-        accounts.loc[len(accounts[])]
+    while True:
+        existingUser = input("Do you have an account? (y/n)")
+        if existingUser == "y":
+            userUser = input("Username: ")
+            # print(f'''{accounts.loc[accounts["username"] == userUser]["password"]}\n
+    # {accounts.loc[accounts["username"] == userUser]["hint"]}''')
+            username = accounts[accounts["username"] == userUser]["username"][0]
+            password = accounts[accounts["username"] == userUser]["password"][0]
+            hint = accounts[accounts["username"] == userUser]["hint"][0]
+            print(hint, username, password)
+            break
+        elif existingUser == "n":
+            print("Create a Profile:")
+            category, first, last, username, password, hint = newAccount()
+            accounts.loc[len(accounts["hint"])] = [category, first, last, username, password, hint]
+            accounts.to_csv("accounts.csv", index=False)
+            print(accounts)
+            break
+        else:
+            print("Invalid input try again")
     tries=0
     userUser=""
     userPass=""
@@ -72,9 +76,9 @@ def intialUserLogin(credentials):
                 credentials = True
             else:
                 userUser = input("Username:  ")
-                print(f"Password Hint: ______")  # Access the hint from the text file and print to screen
+                print(f"Password Hint: {hint}")  # Access the hint from the text file and print to screen
                 userPass = input("Password:  ")
-                if userUser!=username and userPass!=password:
+                if userUser!=username or userPass!=password:
                     tries+=1
                 if tries>0:
                     print("Incorrect username or password, try again")
@@ -84,11 +88,13 @@ def intialUserLogin(credentials):
 
 
 def newAccount():
-    category = input("Category (Home, Work, Entertainment, Bills): ")
-    name = input("Account Name: ")
+    category = input("What type of Account is this? ")
+    first = input("First Name: ")
+    last = input("Last Name: ")
     username = input("Username: ")
     password = input("Password: ")   # Make sure the password meets requirements
     hint = input("Password Hint: ")
+    return category, first, last, username, password, hint
 
 
 def viewByCategory():
@@ -103,16 +109,8 @@ def viewByCategory():
 def viewAccount():
     whichAcc = input("Which account would you like to change?  ")
     
-    with open("accounts.csv","r") as file:
-        lines = file.readlines() #converts file to list
-    for i in range(len(lines)):
-        category,name,username,password,hint = lines[i].strip().split(",")
-        if whichAcc == name:
-           print(f'''
-                 The account: {name}
-                 The username: {username}
-                 The password: {password}
-                 ''')
+    
+    
 
 
 def changeAccount():
@@ -123,8 +121,6 @@ def changeAccount():
     #get data that they want to change
 
     #read in all the data aka save the file to a list
-    with open("accounts.csv","r") as file:
-        lines = file.readlines() #converts file to list
     #find the old account
     for i in range(len(lines)):
         category,name,username,password,hint = lines[i].strip().split(",")  # Will this work with more than 2 variables?
@@ -141,8 +137,6 @@ def deleteAccount():
     whichAcc = input("Which account would you like to delete?  ")
     newLines = []
     found = False
-    with open("accounts.csv","r") as file:
-        lines = file.readlines() #converts file to list
     for i in range(len(lines)):
         category,name,username,password,hint = lines[i].strip().split(",")
         if whichAcc != name:
@@ -154,9 +148,6 @@ def deleteAccount():
     if not found:
         print("The account was not found.")
         return
-    
-    with open("accounts.csv","r") as file:
-        file.writelines(newLines)
            
 
 
