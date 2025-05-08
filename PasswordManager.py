@@ -1,7 +1,9 @@
 import random
 from random import shuffle
+import pandas as pd
 credentials = False
 tries = 0
+accounts = pd.read_csv("accounts.csv")
 
 
 def passwordValidator():
@@ -52,33 +54,37 @@ def intialUserLogin(credentials):
     existingUser = input("Do you have an account? (y/n)")
     
     if existingUser == "y":
-        userUser = input("Username:  ")
-        userPass = input("Password:  ")
+        username = accounts["username"][userUser]
+        password = accounts["password"][userPass]
+        hint = accounts["hint"][userUser]
+        print(hint)
     else:
         print("Create a Profile:")
+        category = input("What type of account is this? ")
         username = input("Username: ")
         password = input("Password: ")   # Make sure the password meets requirements
         hint = input("Password Hint: ")
         first = input("First Name: ")
         last = input("Last Name: ")
-        
+        accounts.loc[len(accounts[])]
     tries=0
-    if tries <3:
-        userUser=""
-        userPass=""
-        while credentials != True:
+    userUser=""
+    userPass=""
+    while credentials != True:
+        if tries <3:
             if userUser==username and userPass==password:  #however you check if the credentials are correct
                 credentials = True
             else:
-                if tries>0:
-                    print("Incorrect username or password, try again")
                 userUser = input("Username:  ")
                 print(f"Password Hint: ______")  # Access the hint from the text file and print to screen
                 userPass = input("Password:  ")
-                tries+=1
-    else:
-        print("Sorry, you have too many invalid login attempts. Close the program and try again.")
-        exit()
+                if userUser!=username and userPass!=password:
+                    tries+=1
+                if tries>0:
+                    print("Incorrect username or password, try again")
+        else:
+            print("Sorry, you have too many invalid login attempts. Close the program and try again.")
+            exit()
 
 def newAccount():
     category = input("Category (Home, Work, Entertainment, Bills): ")
@@ -86,11 +92,6 @@ def newAccount():
     username = input("Username: ")
     password = input("Password: ")   # Make sure the password meets requirements
     hint = input("Password Hint: ")
-    
-    with open("accounts.csv","a") as file:
-        lineToWrite = f"{category},{name},{username},{password},{hint}\n"
-        file.write(lineToWrite)
-        print(f"{name} was added!")
 
 
 def viewByCategory():
@@ -99,14 +100,7 @@ def viewByCategory():
     whichCat = input("Which category do you want to filter by?  ")
 
     #read the data and save to a list
-    with open("accounts.csv","r") as file:
-        lines = file.readlines()
-
-    for i in range(len(lines)):
-        category,name,username,password,hint = lines[i].strip().split(",")
     
-        if whichCat == category:
-            print(name)   #Print the account name
 
 
 def viewAccount():
@@ -121,8 +115,6 @@ def changeAccount():
     #get data that they want to change
 
     #read in all the data aka save the file to a list
-    with open("accounts.csv","r") as file:
-        lines = file.readlines() #converts file to list
     #find the old account
     for i in range(len(lines)):
         category,name,username,password,hint = lines[i].strip().split(",")  # Will this work with more than 2 variables?
@@ -132,9 +124,6 @@ def changeAccount():
             lines[i] = newData
     print(lines) 
     #overwrite the file
-    with open("accounts.csv","w") as file:
-        for eachLine in lines:
-            file.write(eachLine)
 
 
 
