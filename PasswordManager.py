@@ -4,10 +4,6 @@ credentials = False
 tries = 0
 
 
-def passwordValidator():
-    pass
-
-
 def passwordGenerator():
     def shuffle_password(word):  
         word = list(word)
@@ -80,6 +76,7 @@ def intialUserLogin(credentials):
         print("Sorry, you have too many invalid login attempts. Close the program and try again.")
         exit()
 
+
 def newAccount():
     category = input("Category (Home, Work, Entertainment, Bills): ")
     name = input("Account Name: ")
@@ -110,17 +107,27 @@ def viewByCategory():
 
 
 def viewAccount():
-    pass
+    whichAcc = input("Which account would you like to change?  ")
+    
+    with open("accounts.csv","r") as file:
+        lines = file.readlines() #converts file to list
+    for i in range(len(lines)):
+        category,name,username,password,hint = lines[i].strip().split(",")
+        if whichAcc == name:
+           print(f'''
+                 The account: {name}
+                 The username: {username}
+                 The password: {password}
+                 ''')
 
 
 def changeAccount():
-    # ask which account they want to change
+    whichAcc = input("Which account would you like to delete?  ")
     
     #viewAccount()  Run the viewAccount function to show them the current stored information
 
     #get data that they want to change
 
-    #read in all the data aka save the file to a list
     with open("accounts.csv","r") as file:
         lines = file.readlines() #converts file to list
     #find the old account
@@ -139,7 +146,26 @@ def changeAccount():
 
 
 def deleteAccount():
-    pass
+    whichAcc = input("Which account would you like to delete?  ")
+    newLines = []
+    found = False
+    with open("accounts.csv","r") as file:
+        lines = file.readlines() #converts file to list
+    for i in range(len(lines)):
+        category,name,username,password,hint = lines[i].strip().split(",")
+        if whichAcc != name:
+            newLines.append(i)
+        else: 
+            found = True
+            
+    #Tell them if the account is not found
+    if not found:
+        print("The account was not found.")
+        return
+    
+    with open("accounts.csv","r") as file:
+        file.writelines(newLines)
+           
 
 
 def invalid_choice():
@@ -152,7 +178,7 @@ def exit():
 
 
 
-# Main Loop 
+# MAIN LOOP
 
 options = {
         "1":newAccount,
