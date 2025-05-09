@@ -1,6 +1,8 @@
+import pandas as pd
 from random import shuffle
 import random
 special = ["!","@","#","$","%","^","&","*","(",")"]
+accounts = pd.read_csv("accounts.csv")
 
 class Passwords:
         
@@ -76,29 +78,39 @@ class Account:
     def __init__(self, filename="accounts.csv"):
         self.filename = filename
     
-    
-    def viewAccount(accounts, whichAcc):
+    def viewAccount():
+        whichAcc = input("Which account would you like to Change?  ")
+        for i in range(len(accounts["category"])):
+            if accounts["username"][i] == whichAcc:
+                category = accounts["category"][i]
+                name = accounts["name"][i]
+                username = accounts["username"][i]
+                password = accounts["password"][i]
+                hint = accounts["hint"][i]
+                break
         
-        for i in range(len(accounts,name,username,password)):
-            category,name,username,password,hint = accounts[i].strip().split(",")
-            if whichAcc == name:
-                print(f'''
-                        The account: {name}
-                        The username: {username}
-                        The password: {password}
-                        ''')
+        print(f'''
+              category: {category}
+              name: {name}
+              user: {username}
+              password: {password}
+              hint: {hint}''')
+        
+        return whichAcc
                 
-                
-    def viewByCategory(accounts):
+    def viewByCategory():
         #print out the categories that they can filter by
         #obtain which category to filter by
         whichCat = input("Which category do you want to filter by?  ")
 
-        filtered = accounts[accounts['whichCat'].str.low() == whichCat.lower()]
-        
-        print(f'Accounts under category {whichCat}')
-        for name in filtered['name']:
-            print(name)
+        for i in range(len(accounts["category"])):
+            if accounts["category"][i] == whichCat:
+                print(f'''
+    Category: {accounts["category"][i]}
+    Name: {accounts["name"][i]}
+    Username: {accounts["username"][i]}
+    Password: {accounts["password"][i]}
+    hint: {accounts["hint"][i]}''')
             
     
     def newAccount():
@@ -106,45 +118,47 @@ class Account:
         name = input("Account Name: ")
         username = input("Username: ")
         password = input("Password: ")   # Make sure the password meets requirements
+        valid, message = Passwords.passwordValidator(password)
+        print(message)
+        while not valid:
+            password = input("Password: ")
+            valid, message = Passwords.passwordValidator(password)
+            print(message)
         hint = input("Password Hint: ")
         return category, name, username, password, hint
         
         
-    def changeAccount(accounts):
-        whichAcc = input("Which account would you like to Change?  ")
-        
-        #viewAccount()  Run the viewAccount function to show them the current stored information
+    def changeAccount():
+        whichAcc = Account.viewAccount() #Run the viewAccount function to show them the current stored information
 
         #get data that they want to change
-
+        whichPart = input(f"which part of {whichAcc} do you want to change? ")
+        for i in range(len(accounts["username"])):
+            if whichAcc == accounts["username"][i]:
+                whichPart.lower()
+                accounts[whichPart][i] = input("What do you want to change it to? ")
+                category = accounts["category"][i]
+                name = accounts["name"][i]
+                username = accounts["username"][i]
+                password = accounts["password"][i]
+                hint = accounts["hint"][i]
+                break
+        
         #read in all the data aka save the file to a list
-       
+        accounts.to_csv("accounts.csv", index=False)
         #find the old account
-        for i in range(len(accounts)):
-            category,name,username,password,hint = accounts[i].strip().split(",")
-            # Need to add something else to make this actually work
+        # for i in range(len(accounts)):
+        #     category,name,username,password,hint = accounts[i].strip().split(",")
+        #     # Need to add something else to make this actually work
 
 
-    def deleteAccount(accounts):
+    def deleteAccount():
         whichAcc = input("Which account would you like to delete?  ")
-        newLines = []
-        found = False
         
-        with open("accounts.csv","r") as file:
-            lines = file.readlines() #converts file to list
-        for i in range(len(lines)):
-            category,name,username,password,hint = accounts[i].strip().split(",")
-            if whichAcc != name:
-                newLines.append(i)
-            else: 
-                found = True
+        for i in range(len(accounts["username"])):
+            if whichAcc == accounts["username"][i]:
+                found = i
                 
-        #Tell them if the account is not found
-        if not found:
-            print("The account was not found.")
-            return
-        
-        with open("accounts.csv","r") as file:
-            file.writelines(newLines)
-            
-                        
+        accounts.drop(i)
+        print(accounts)
+        accounts.to_csv("accounts.csv", index=False)

@@ -63,7 +63,7 @@ options = {
         }
 
 #Login
-intialUserLogin(False)
+# intialUserLogin(False)
 
 while True:
     print("\n--- Password Manager ---")
