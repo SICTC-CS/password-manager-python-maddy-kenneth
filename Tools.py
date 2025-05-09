@@ -77,8 +77,7 @@ class Account:
         self.filename = filename
     
     
-    def viewAccount(accounts):
-        whichAcc = input("Which account would you like to change?  ")
+    def viewAccount(accounts, whichAcc):
         
         for i in range(len(accounts,name,username,password)):
             category,name,username,password,hint = accounts[i].strip().split(",")
@@ -102,11 +101,17 @@ class Account:
             print(name)
             
     
-    
+    def newAccount():
+        category = input("Category (Home, Work, Entertainment, Bills): ")
+        name = input("Account Name: ")
+        username = input("Username: ")
+        password = input("Password: ")   # Make sure the password meets requirements
+        hint = input("Password Hint: ")
+        return category, name, username, password, hint
         
         
     def changeAccount(accounts):
-        whichAcc = input("Which account would you like to delete?  ")
+        whichAcc = input("Which account would you like to Change?  ")
         
         #viewAccount()  Run the viewAccount function to show them the current stored information
 
@@ -124,6 +129,7 @@ class Account:
         whichAcc = input("Which account would you like to delete?  ")
         newLines = []
         found = False
+        
         with open("accounts.csv","r") as file:
             lines = file.readlines() #converts file to list
         for i in range(len(lines)):

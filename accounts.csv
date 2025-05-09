@@ -1,2 +1,3 @@
-category,firstname,lastname,username,password,hint
-Work,Kenneth,Payne,Ninjagofan2300,Letsgoarin,favorite of the new ninja
+category,name,username,password,hint
+Work,Kenneth,Ninjagofan2300,Letsgoarin,favorite of the new ninja
+Entertainment,Kenneth,Ninjagofan2305,Sora!1,tech elemental

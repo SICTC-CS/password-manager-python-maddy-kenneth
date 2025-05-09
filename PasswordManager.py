@@ -10,19 +10,20 @@ def intialUserLogin(credentials):
     existingUser = input("Do you have an account? (y/n)")
     
     if existingUser == "y":
-        username = accounts["username"][userUser]
-        password = accounts["password"][userPass]
-        hint = accounts["hint"][userUser]
-        print(hint)
+        userUser = input("What is your username? ")
+        for i in range(len(accounts["username"])):
+            if userUser == accounts["username"][i]:
+                username = accounts["username"][i]
+                password = accounts["password"][i]
+                hint = accounts["hint"][i]
+                # print(accounts["password"][i])
+        # print(hint)
     else:
         print("Create a Profile:")
-        category = input("What type of account is this? ")
-        username = input("Username: ")
-        password = input("Password: ")   # Make sure the password meets requirements
-        hint = input("Password Hint: ")
-        first = input("First Name: ")
-        last = input("Last Name: ")
-        accounts.loc[len(accounts[])]
+        category, name, username, password, hint = Account.newAccount()
+        accounts.loc[len(accounts)] = [category, name, username, password, hint]
+        accounts.to_csv("accounts.csv", index=False)
+        
     tries=0
     userUser=""
     userPass=""
@@ -32,7 +33,7 @@ def intialUserLogin(credentials):
                 credentials = True
             else:
                 userUser = input("Username:  ")
-                print(f"Password Hint: ______")  # Access the hint from the text file and print to screen
+                print(f"Password Hint: {hint}")  # Access the hint from the text file and print to screen
                 userPass = input("Password:  ")
                 if userUser!=username and userPass!=password:
                     tries+=1
@@ -42,14 +43,6 @@ def intialUserLogin(credentials):
             print("Sorry, you have too many invalid login attempts. Close the program and try again.")
             exit()
 
-
-def newAccount():
-    category = input("Category (Home, Work, Entertainment, Bills): ")
-    name = input("Account Name: ")
-    username = input("Username: ")
-    password = input("Password: ")   # Make sure the password meets requirements
-    hint = input("Password Hint: ")
-
 def invalid_choice():
     print("Invalid choice. Please select a valid option.")
 
@@ -57,21 +50,10 @@ def exit():
     print("Goodbye!")
     raise SystemExit  #stops the program
 
-def newAccount(accounts):
-        category = input("Category (Home, Work, Entertainment, Bills): ")
-        name = input("Account Name: ")
-        username = input("Username: ")
-        password = input("Password: ")   # Make sure the password meets requirements
-        hint = input("Password Hint: ")
-        
-        listOfAccounts.append(Account(category,name,username,password,hint))
-        ## Need something after this to actually write to the file    
-
-
 # MAIN LOOP
 
 options = {
-        "1":newAccount,
+        "1":Account.newAccount,
         "2":Account.viewAccount,
         "3":Account.viewByCategory,
         "4":Passwords.passwordGenerator,
@@ -81,7 +63,7 @@ options = {
         }
 
 #Login
-# intialUserLogin(False)
+intialUserLogin(False)
 
 while True:
     print("\n--- Password Manager ---")
